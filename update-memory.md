@@ -10,6 +10,7 @@ Re-read the existing Memory docs (`docs/spec/*.md`) and update them with attenti
 - Accurately reflect changed type definitions
 - **Important**: If the content to be output to a file exceeds 2000 tokens, split the file and give each an appropriate filename
 - **Important**: If test code exists, treat the test code as the source of truth, and if there is a discrepancy between the test code and implementation, note it as a remark
+- **Important**: Add the commit hash of the creation time to the last line of each file, and when updating, only the differences from that commit will be included.
 
 ## Target files
 
