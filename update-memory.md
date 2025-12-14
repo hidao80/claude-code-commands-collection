@@ -16,10 +16,11 @@ Re-read the existing Memory docs (`docs/spec/*.md`) and update them with attenti
 
 **Important**: Create or update in the following order.
 
-1. @spec/overview.md
-2. @spec/configuration.md
-3. @spec/components.md
-4. @spec/utilities.md
-5. @spec/database.md
-6. @spec/known_bugs.md
-7. @spec/todo.md
+1. @docs/spec/screens.md
+2. @docs/spec/configuration.md
+3. @docs/spec/components.md
+4. @docs/spec/utilities.md
+5. @docs/spec/databases.md
+6. @docs/spec/overview.md
+7. @docs/spec/known_bugs.md
+8. @docs/spec/todo.md
