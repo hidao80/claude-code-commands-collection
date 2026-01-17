@@ -9,7 +9,7 @@ Modernize your repository (Docker + CI/CD + README)
 
 ## Usage
 ```
-/modernize-repo [node|python|php]
+/modernize-repo [js|python|php]
 ```
 
 ## What it does
