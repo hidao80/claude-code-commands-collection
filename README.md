@@ -4,7 +4,7 @@
 
 A collection of useful slash commands for [Claude Code](https://claude.ai/claude-code), designed to enhance your development workflow.
 
-## 📋 Available Commands
+## :clipboard: Available Commands
 
 ### `/commit-msg`
 
@@ -78,20 +78,25 @@ See [examples/update-memory.md](examples/update-memory.md) for detailed examples
 Modernizes your repository with Docker support, CI/CD pipelines, and README updates.
 
 **Features:**
-- Creates multi-stage Dockerfile for optimized production builds
+- Detects package manager from lock files (pnpm, yarn, bun, deno, npm)
+- Creates multi-stage Dockerfile optimized per package manager
 - Generates docker-compose.yml for development environment
-- Sets up GitHub Actions workflows (lint, test, audit, docker build)
+- Sets up GitHub Actions workflows (lint, test, audit, build)
+- Adds E2E testing setup with Playwright
 - Updates README with CI badges and Quick Start section
-- Supports Node.js, Python, and PHP projects
+- Supports JavaScript/TypeScript, Python, and PHP projects
 
 **Allowed tools:**
 - `Bash(git:*)` - Git operations
+- `Bash(docker:*)` - Docker operations
 - `Read(*)` - Read project files
 - `Write(*)` - Write configuration files
+- `Glob(*)` - File pattern matching
+- `Grep(*)` - Content search
 
 **Usage:**
 ```bash
-/modernize-repo [node|python|php]
+/modernize-repo [js|python|php]
 ```
 
 **Options:**
@@ -106,14 +111,16 @@ Modernizes your repository with Docker support, CI/CD pipelines, and README upda
 | Category | Files |
 |----------|-------|
 | Docker | `Dockerfile`, `docker-compose.yml`, `.dockerignore` |
-| CI/CD | `.github/workflows/lint.yml`, `test.yml`, `audit.yml`, `docker.yml` |
+| CI/CD (JS) | `.github/workflows/lint.yml`, `test.yml`, `audit.yml`, `build.yml` |
+| CI/CD (PHP) | `.github/workflows/lint.yml`, `analyse.yml`, `test.yml`, `audit.yml`, `docker.yml` |
+| E2E Testing | `playwright.config.ts`, `tests/e2e/screenshot.spec.ts` |
 | README | CI badges, Quick Start section |
 
 See [examples/modernize-repo.md](examples/modernize-repo.md) for language-specific examples.
 
 ---
 
-## 📁 Repository Structure
+## :file_folder: Repository Structure
 
 ```
 claude-code-commands-collection/
@@ -122,7 +129,7 @@ claude-code-commands-collection/
 │   ├── update-memory.md        # Documentation updater
 │   └── modernize-repo/         # Repository modernization
 │       ├── COMMAND.md          # Main command definition
-│       ├── node.md             # Node.js configuration
+│       ├── js.md               # JavaScript/TypeScript configuration
 │       ├── python.md           # Python configuration
 │       └── php.md              # PHP configuration
 ├── examples/
@@ -133,7 +140,7 @@ claude-code-commands-collection/
 └── LICENSE
 ```
 
-## 🚀 Installation
+## :rocket: Installation
 
 1. Clone this repository or download the command files
 2. Copy the command files to your project's `.claude/commands/` directory:
@@ -147,7 +154,7 @@ claude-code-commands-collection/
    ```
 3. The commands will be available in Claude Code as slash commands
 
-## 📝 Creating Your Own Commands
+## :pencil: Creating Your Own Commands
 
 Each command is a markdown file with frontmatter configuration:
 
@@ -175,11 +182,8 @@ For complex commands, create a directory with:
 
 See the [Claude Code documentation](https://docs.anthropic.com/en/docs/claude-code) for more details on creating custom commands.
 
-## 📄 License
 
-MIT License - see [LICENSE](LICENSE) file for details.
-
-## 🤝 Contributing
+## :handshake: Contributing
 
 Contributions are welcome! Feel free to:
 - Submit new command ideas
@@ -187,9 +191,9 @@ Contributions are welcome! Feel free to:
 - Report issues or bugs
 - Share your own custom commands
 
-## 👤 Author
+## :page_facing_up: License
 
-hidao80
+MIT License - see [LICENSE](LICENSE) file for details.
 
 ---
 
