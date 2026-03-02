@@ -24,7 +24,7 @@ Modernize your repository (Docker + CI/CD + README)
 
 3. **README updates**
    - Add CI badges
-   - Quick Start section (Docker startup instructions)
+   - Quick Start section (Docker & Podman startup instructions)
 
 ## Options
 

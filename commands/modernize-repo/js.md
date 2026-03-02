@@ -641,7 +641,173 @@ jobs:
       - run: docker build -t ${{ github.repository }}:${{ github.sha }} .
 ```
 
-### 3. README Updates
+### 3. E2E Testing with Playwright (Local Execution)
+
+#### Setup Playwright
+
+Add Playwright as a dev dependency and initialize configuration.
+
+##### npm/pnpm/yarn/bun
+
+Add to `package.json`:
+
+```json
+{
+  "devDependencies": {
+    "@playwright/test": "^1.49.0"
+  },
+  "scripts": {
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:headed": "playwright test --headed"
+  }
+}
+```
+
+##### deno
+
+Add to `deno.json`:
+
+```json
+{
+  "tasks": {
+    "test:e2e": "npx playwright test",
+    "test:e2e:ui": "npx playwright test --ui",
+    "test:e2e:headed": "npx playwright test --headed"
+  }
+}
+```
+
+#### playwright.config.ts
+
+Create configuration file for all package managers:
+
+```typescript
+import { defineConfig, devices } from '@playwright/test';
+
+export default defineConfig({
+  testDir: './tests/e2e',
+  fullyParallel: true,
+  forbidOnly: !!process.env.CI,
+  retries: process.env.CI ? 2 : 0,
+  workers: process.env.CI ? 1 : undefined,
+  reporter: 'html',
+  use: {
+    baseURL: 'http://localhost:3000',
+    trace: 'on-first-retry',
+    screenshot: 'only-on-failure',
+  },
+  projects: [
+    {
+      name: 'chromium',
+      use: { ...devices['Desktop Chrome'] },
+    },
+    {
+      name: 'firefox',
+      use: { ...devices['Desktop Firefox'] },
+    },
+    {
+      name: 'webkit',
+      use: { ...devices['Desktop Safari'] },
+    },
+  ],
+  webServer: {
+    command: 'npm run dev',  // Adjust based on package manager
+    url: 'http://localhost:3000',
+    reuseExistingServer: !process.env.CI,
+  },
+});
+```
+
+#### Test File Example: Full-Page Screenshot
+
+Create `tests/e2e/screenshot.spec.ts`:
+
+```typescript
+import { test, expect } from '@playwright/test';
+
+test.describe('Full-Page Screenshot Tests', () => {
+  test('should capture full-page screenshot of homepage', async ({ page }) => {
+    // Navigate to the homepage
+    await page.goto('/');
+
+    // Wait for page to be fully loaded
+    await page.waitForLoadState('networkidle');
+
+    // Take full-page screenshot
+    await page.screenshot({
+      path: 'screenshots/homepage-full.png',
+      fullPage: true,
+    });
+
+    // Verify the page loaded correctly
+    await expect(page).toHaveTitle(/.+/);
+  });
+
+  test('should capture full-page screenshot of all main pages', async ({ page }) => {
+    const pages = [
+      { path: '/', name: 'homepage' },
+      { path: '/about', name: 'about' },
+      { path: '/contact', name: 'contact' },
+    ];
+
+    for (const pageInfo of pages) {
+      await page.goto(pageInfo.path);
+      await page.waitForLoadState('networkidle');
+
+      // Take full-page screenshot
+      await page.screenshot({
+        path: `screenshots/${pageInfo.name}-full.png`,
+        fullPage: true,
+      });
+
+      console.log(`Screenshot saved: ${pageInfo.name}-full.png`);
+    }
+  });
+
+  test('should capture full-page screenshot with custom viewport', async ({ page }) => {
+    // Set custom viewport size
+    await page.setViewportSize({ width: 1920, height: 1080 });
+
+    await page.goto('/');
+    await page.waitForLoadState('networkidle');
+
+    // Take full-page screenshot
+    await page.screenshot({
+      path: 'screenshots/homepage-1920x1080-full.png',
+      fullPage: true,
+    });
+  });
+
+  test('should capture mobile full-page screenshot', async ({ page }) => {
+    // Set mobile viewport
+    await page.setViewportSize({ width: 375, height: 667 });
+
+    await page.goto('/');
+    await page.waitForLoadState('networkidle');
+
+    // Take full-page screenshot
+    await page.screenshot({
+      path: 'screenshots/homepage-mobile-full.png',
+      fullPage: true,
+    });
+  });
+});
+```
+
+#### .gitignore Updates
+
+Add to `.gitignore`:
+
+```
+# Playwright
+test-results/
+playwright-report/
+playwright/.cache/
+screenshots/
+```
+
+### 4. README Updates
 
 Add the following to your existing README.md.
 
@@ -784,8 +950,8 @@ deno task dev
 
 - Detect the package manager by checking for lock files in priority order (pnpm → yarn → bun → deno → npm)
 - Ensure config files have appropriate scripts defined:
-  - **npm/pnpm/yarn/bun**: `package.json` needs `build`, `dev`, `lint`, and `test` scripts
-  - **deno**: `deno.json` needs `build`, `dev`, and `test` tasks
+  - **npm/pnpm/yarn/bun**: `package.json` needs `build`, `dev`, `lint`, `test`, and `test:e2e` scripts
+  - **deno**: `deno.json` needs `build`, `dev`, `test`, and `test:e2e` tasks
 - Adjust the Dockerfile build commands and entrypoint as needed for your project structure
 - Security audit commands vary by package manager:
   - npm: `npm audit fix`
@@ -793,3 +959,9 @@ deno task dev
   - yarn: `yarn audit` (manual fix required)
   - bun: No built-in audit (use `npm audit` with package-lock.json)
   - deno: Uses URL imports with built-in security model
+- Playwright E2E testing:
+  - Install Playwright: `npx playwright install` (or use package manager equivalent)
+  - Run tests locally: `npm run test:e2e` (adjust for your package manager)
+  - Run tests in UI mode: `npm run test:e2e:ui`
+  - Update `playwright.config.ts` webServer command based on your package manager
+  - Full-page screenshots are saved to `screenshots/` directory (add to `.gitignore`)

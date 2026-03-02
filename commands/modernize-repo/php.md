@@ -306,7 +306,166 @@ jobs:
         run: docker build -t ${{ github.repository }}:${{ github.sha }} .
 ```
 
-### 3. README Updates
+### 3. E2E Testing with Playwright (Local Execution)
+
+#### Setup Playwright for PHP Projects
+
+Even though this is a PHP project, we can use Playwright (Node.js-based) for E2E testing.
+
+#### Create package.json
+
+Add `package.json` to your PHP project root:
+
+```json
+{
+  "name": "php-e2e-tests",
+  "version": "1.0.0",
+  "private": true,
+  "devDependencies": {
+    "@playwright/test": "^1.49.0"
+  },
+  "scripts": {
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:headed": "playwright test --headed"
+  }
+}
+```
+
+#### playwright.config.ts
+
+Create configuration file:
+
+```typescript
+import { defineConfig, devices } from '@playwright/test';
+
+export default defineConfig({
+  testDir: './tests/e2e',
+  fullyParallel: true,
+  forbidOnly: !!process.env.CI,
+  retries: process.env.CI ? 2 : 0,
+  workers: process.env.CI ? 1 : undefined,
+  reporter: 'html',
+  use: {
+    baseURL: 'http://localhost:8080',
+    trace: 'on-first-retry',
+    screenshot: 'only-on-failure',
+  },
+  projects: [
+    {
+      name: 'chromium',
+      use: { ...devices['Desktop Chrome'] },
+    },
+    {
+      name: 'firefox',
+      use: { ...devices['Desktop Firefox'] },
+    },
+    {
+      name: 'webkit',
+      use: { ...devices['Desktop Safari'] },
+    },
+  ],
+  webServer: {
+    command: 'php -S localhost:8080 -t public',
+    url: 'http://localhost:8080',
+    reuseExistingServer: !process.env.CI,
+  },
+});
+```
+
+#### Test File Example: Full-Page Screenshot
+
+Create `tests/e2e/screenshot.spec.ts`:
+
+```typescript
+import { test, expect } from '@playwright/test';
+
+test.describe('Full-Page Screenshot Tests', () => {
+  test('should capture full-page screenshot of homepage', async ({ page }) => {
+    // Navigate to the homepage
+    await page.goto('/');
+
+    // Wait for page to be fully loaded
+    await page.waitForLoadState('networkidle');
+
+    // Take full-page screenshot
+    await page.screenshot({
+      path: 'screenshots/homepage-full.png',
+      fullPage: true,
+    });
+
+    // Verify the page loaded correctly
+    await expect(page).toHaveTitle(/.+/);
+  });
+
+  test('should capture full-page screenshot of all main pages', async ({ page }) => {
+    const pages = [
+      { path: '/', name: 'homepage' },
+      { path: '/about', name: 'about' },
+      { path: '/contact', name: 'contact' },
+    ];
+
+    for (const pageInfo of pages) {
+      await page.goto(pageInfo.path);
+      await page.waitForLoadState('networkidle');
+
+      // Take full-page screenshot
+      await page.screenshot({
+        path: `screenshots/${pageInfo.name}-full.png`,
+        fullPage: true,
+      });
+
+      console.log(`Screenshot saved: ${pageInfo.name}-full.png`);
+    }
+  });
+
+  test('should capture full-page screenshot with custom viewport', async ({ page }) => {
+    // Set custom viewport size
+    await page.setViewportSize({ width: 1920, height: 1080 });
+
+    await page.goto('/');
+    await page.waitForLoadState('networkidle');
+
+    // Take full-page screenshot
+    await page.screenshot({
+      path: 'screenshots/homepage-1920x1080-full.png',
+      fullPage: true,
+    });
+  });
+
+  test('should capture mobile full-page screenshot', async ({ page }) => {
+    // Set mobile viewport
+    await page.setViewportSize({ width: 375, height: 667 });
+
+    await page.goto('/');
+    await page.waitForLoadState('networkidle');
+
+    // Take full-page screenshot
+    await page.screenshot({
+      path: 'screenshots/homepage-mobile-full.png',
+      fullPage: true,
+    });
+  });
+});
+```
+
+#### .gitignore Updates
+
+Add to `.gitignore`:
+
+```
+# Node.js (for Playwright)
+node_modules/
+package-lock.json
+
+# Playwright
+test-results/
+playwright-report/
+playwright/.cache/
+screenshots/
+```
+
+### 4. README Updates
 
 Add the following to your existing README.md.
 
@@ -350,3 +509,11 @@ php -S localhost:8000 -t public
 - If using Mago, create a `mago.toml` configuration file
 - Adjust the Dockerfile PHP extensions and entrypoint as needed
 - If security audit finds vulnerabilities, fix them with `composer update`
+- Playwright E2E testing (requires Node.js):
+  - Create `package.json` in project root with Playwright dependencies
+  - Install Playwright: `npm install` then `npx playwright install`
+  - Run tests locally: `npm run test:e2e`
+  - Run tests in UI mode: `npm run test:e2e:ui`
+  - Update `playwright.config.ts` webServer command if using different PHP server setup
+  - Full-page screenshots are saved to `screenshots/` directory (add to `.gitignore`)
+  - Add `node_modules/` and Playwright artifacts to `.gitignore`
