@@ -540,8 +540,7 @@ Add the following to your existing README.md.
 docker compose up
 
 # Production build
-docker build -t app .
-docker run -p 9000:9000 app
+docker compose up --build
 ```
 
 ### Run with Podman
@@ -551,8 +550,7 @@ docker run -p 9000:9000 app
 podman compose up
 
 # Production build
-podman build -t app .
-podman run -p 9000:9000 app
+podman compose up --build
 ```
 
 ### Run locally

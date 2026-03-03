@@ -789,8 +789,7 @@ Choose the appropriate section based on the detected package manager.
 docker compose up
 
 # Production build
-docker build -t app .
-docker run -p 3000:3000 app
+docker compose up --build
 ```
 
 ### Run with Podman
@@ -800,8 +799,7 @@ docker run -p 3000:3000 app
 podman compose up
 
 # Production build
-podman build -t app .
-podman run -p 3000:3000 app
+podman compose up --build
 ```
 
 ### Run locally
@@ -824,8 +822,7 @@ npm run dev
 docker compose up
 
 # Production build
-docker build -t app .
-docker run -p 3000:3000 app
+docker compose up --build
 ```
 
 ### Run with Podman
@@ -835,8 +832,7 @@ docker run -p 3000:3000 app
 podman compose up
 
 # Production build
-podman build -t app .
-podman run -p 3000:3000 app
+podman compose up --build
 ```
 
 ### Run locally
@@ -859,8 +855,7 @@ pnpm run dev
 docker compose up
 
 # Production build
-docker build -t app .
-docker run -p 3000:3000 app
+docker compose up --build
 ```
 
 ### Run with Podman
@@ -870,8 +865,7 @@ docker run -p 3000:3000 app
 podman compose up
 
 # Production build
-podman build -t app .
-podman run -p 3000:3000 app
+podman compose up --build
 ```
 
 ### Run locally
@@ -894,8 +888,7 @@ yarn dev
 docker compose up
 
 # Production build
-docker build -t app .
-docker run -p 3000:3000 app
+docker compose up --build
 ```
 
 ### Run with Podman
@@ -905,8 +898,7 @@ docker run -p 3000:3000 app
 podman compose up
 
 # Production build
-podman build -t app .
-podman run -p 3000:3000 app
+podman compose up --build
 ```
 
 ### Run locally
@@ -929,8 +921,7 @@ bun run dev
 docker compose up
 
 # Production build
-docker build -t app .
-docker run -p 3000:3000 app
+docker compose up --build
 ```
 
 ### Run with Podman
@@ -940,8 +931,7 @@ docker run -p 3000:3000 app
 podman compose up
 
 # Production build
-podman build -t app .
-podman run -p 3000:3000 app
+podman compose up --build
 ```
 
 ### Run locally
