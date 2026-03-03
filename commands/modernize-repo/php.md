@@ -337,7 +337,7 @@ Add `package.json` to your PHP project root:
 
 #### biome.json
 
-JS/TSファイル（E2Eテスト含む）のlint設定をプロジェクトルートに作成します。
+Create linting configuration for JS/TS files (including E2E tests) in the project root.
 
 ```json
 {
@@ -358,8 +358,6 @@ JS/TSファイル（E2Eテスト含む）のlint設定をプロジェクトル�
 ```
 
 #### .github/workflows/js-lint.yml
-
-JS/TSファイル（E2Eテストなど）をBiomeでlintするワークフローを追加します。
 
 ```yaml
 name: JS Lint
@@ -386,7 +384,7 @@ jobs:
 Create configuration file:
 
 ```typescript
-import { defineConfig, devices } from '@playwright/test';
+import { defineConfig } from '@playwright/test';
 
 export default defineConfig({
   testDir: './tests/e2e',
@@ -397,21 +395,22 @@ export default defineConfig({
   reporter: 'html',
   use: {
     baseURL: 'http://localhost:8080',
+    browserName: 'chromium',
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
   },
   projects: [
     {
-      name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
+      name: 'mobile',
+      use: { viewport: { width: 375, height: 812 } },
     },
     {
-      name: 'firefox',
-      use: { ...devices['Desktop Firefox'] },
+      name: 'tablet',
+      use: { viewport: { width: 768, height: 1024 } },
     },
     {
-      name: 'webkit',
-      use: { ...devices['Desktop Safari'] },
+      name: 'fhd',
+      use: { viewport: { width: 1920, height: 1080 } },
     },
   ],
   webServer: {
@@ -429,72 +428,27 @@ Create `tests/e2e/screenshot.spec.ts`:
 ```typescript
 import { test, expect } from '@playwright/test';
 
+const PAGES = [
+  { path: '/', name: 'homepage' },
+  { path: '/about', name: 'about' },
+  { path: '/contact', name: 'contact' },
+];
+
 test.describe('Full-Page Screenshot Tests', () => {
-  test('should capture full-page screenshot of homepage', async ({ page }) => {
-    // Navigate to the homepage
-    await page.goto('/');
-
-    // Wait for page to be fully loaded
-    await page.waitForLoadState('networkidle');
-
-    // Take full-page screenshot
-    await page.screenshot({
-      path: 'screenshots/homepage-full.png',
-      fullPage: true,
-    });
-
-    // Verify the page loaded correctly
-    await expect(page).toHaveTitle(/.+/);
-  });
-
-  test('should capture full-page screenshot of all main pages', async ({ page }) => {
-    const pages = [
-      { path: '/', name: 'homepage' },
-      { path: '/about', name: 'about' },
-      { path: '/contact', name: 'contact' },
-    ];
-
-    for (const pageInfo of pages) {
+  for (const pageInfo of PAGES) {
+    test(`capture ${pageInfo.name}`, async ({ page }, testInfo) => {
       await page.goto(pageInfo.path);
       await page.waitForLoadState('networkidle');
 
-      // Take full-page screenshot
+      // Example filenames: homepage-mobile.png / about-tablet.png / contact-fhd.png
       await page.screenshot({
-        path: `screenshots/${pageInfo.name}-full.png`,
+        path: `screenshots/${pageInfo.name}-${testInfo.project.name}.png`,
         fullPage: true,
       });
 
-      console.log(`Screenshot saved: ${pageInfo.name}-full.png`);
-    }
-  });
-
-  test('should capture full-page screenshot with custom viewport', async ({ page }) => {
-    // Set custom viewport size
-    await page.setViewportSize({ width: 1920, height: 1080 });
-
-    await page.goto('/');
-    await page.waitForLoadState('networkidle');
-
-    // Take full-page screenshot
-    await page.screenshot({
-      path: 'screenshots/homepage-1920x1080-full.png',
-      fullPage: true,
+      await expect(page).toHaveTitle(/.+/);
     });
-  });
-
-  test('should capture mobile full-page screenshot', async ({ page }) => {
-    // Set mobile viewport
-    await page.setViewportSize({ width: 375, height: 667 });
-
-    await page.goto('/');
-    await page.waitForLoadState('networkidle');
-
-    // Take full-page screenshot
-    await page.screenshot({
-      path: 'screenshots/homepage-mobile-full.png',
-      fullPage: true,
-    });
-  });
+  }
 });
 ```
 
