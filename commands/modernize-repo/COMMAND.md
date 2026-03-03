@@ -22,7 +22,15 @@ Modernize your repository (Docker + CI/CD + README)
 2. **CI/CD**
    - GitHub Actions (lint + audit + docker build)
 
-3. **README updates**
+3. **E2E Testing (Playwright)**
+   - Add `@playwright/test` to `package.json` devDependencies
+   - Add scripts to `package.json`:
+     - `"test:e2e": "playwright test"`
+     - `"screenshot": "playwright test tests/e2e/screenshot.spec.ts"` — full-page screenshots only
+   - Create `playwright.config.ts`
+   - Create `tests/e2e/screenshot.spec.ts`
+
+4. **README updates**
    - Add CI badges
    - Quick Start section (Docker & Podman startup instructions)
 

@@ -327,6 +327,7 @@ Add `package.json` to your PHP project root:
   },
   "scripts": {
     "lint": "biome lint .",
+    "screenshot": "playwright test tests/e2e/screenshot.spec.ts",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
     "test:e2e:headed": "playwright test --headed"
@@ -543,6 +544,17 @@ docker build -t app .
 docker run -p 9000:9000 app
 ```
 
+### Run with Podman
+
+```bash
+# Development
+podman compose up
+
+# Production build
+podman build -t app .
+podman run -p 9000:9000 app
+```
+
 ### Run locally
 
 ```bash
@@ -558,9 +570,9 @@ php -S localhost:8000 -t public
 - Adjust the Dockerfile PHP extensions and entrypoint as needed
 - If security audit finds vulnerabilities, fix them with `composer update`
 - JS/TS linting with Biome:
-  - `biome.json` をプロジェクトルートに作成してルールを設定する
-  - CI: `biomejs/setup-biome@v2` アクションで `biome lint .` を実行（Node.js セットアップ不要）
-  - ローカル実行: `npm run lint`（`package.json` の `lint` スクリプト経由）
+  - Create `biome.json` in project root to configure linting rules
+  - CI: Run `biome lint .` using the `biomejs/setup-biome@v2` action (no Node.js setup required)
+  - Local execution: `npm run lint` (via the `lint` script in `package.json`)
 - Playwright E2E testing (requires Node.js):
   - Create `package.json` in project root with Biome and Playwright dependencies
   - Install dependencies: `npm install` then `npx playwright install`

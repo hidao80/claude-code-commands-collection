@@ -607,6 +607,7 @@ Add to `package.json`:
   },
   "scripts": {
     "lint": "biome lint .",
+    "screenshot": "playwright test tests/e2e/screenshot.spec.ts",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
     "test:e2e:headed": "playwright test --headed"
@@ -792,6 +793,17 @@ docker build -t app .
 docker run -p 3000:3000 app
 ```
 
+### Run with Podman
+
+```bash
+# Development
+podman compose up
+
+# Production build
+podman build -t app .
+podman run -p 3000:3000 app
+```
+
 ### Run locally
 
 ```bash
@@ -814,6 +826,17 @@ docker compose up
 # Production build
 docker build -t app .
 docker run -p 3000:3000 app
+```
+
+### Run with Podman
+
+```bash
+# Development
+podman compose up
+
+# Production build
+podman build -t app .
+podman run -p 3000:3000 app
 ```
 
 ### Run locally
@@ -840,6 +863,17 @@ docker build -t app .
 docker run -p 3000:3000 app
 ```
 
+### Run with Podman
+
+```bash
+# Development
+podman compose up
+
+# Production build
+podman build -t app .
+podman run -p 3000:3000 app
+```
+
 ### Run locally
 
 ```bash
@@ -864,6 +898,17 @@ docker build -t app .
 docker run -p 3000:3000 app
 ```
 
+### Run with Podman
+
+```bash
+# Development
+podman compose up
+
+# Production build
+podman build -t app .
+podman run -p 3000:3000 app
+```
+
 ### Run locally
 
 ```bash
@@ -886,6 +931,17 @@ docker compose up
 # Production build
 docker build -t app .
 docker run -p 3000:3000 app
+```
+
+### Run with Podman
+
+```bash
+# Development
+podman compose up
+
+# Production build
+podman build -t app .
+podman run -p 3000:3000 app
 ```
 
 ### Run locally
