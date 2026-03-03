@@ -82,7 +82,8 @@ Modernizes your repository with Docker support, CI/CD pipelines, and README upda
 - Creates multi-stage Dockerfile optimized per package manager
 - Generates docker-compose.yml for development environment
 - Sets up GitHub Actions workflows (lint, test, audit, build)
-- Adds E2E testing setup with Playwright
+- JS/TS linting uses [Biome](https://biomejs.dev/) (`biomejs/setup-biome@v2`) — no Node.js setup required
+- Adds E2E testing setup with Playwright, including a `screenshot` script for full-page screenshots
 - Updates README with CI badges and Quick Start section
 - Supports JavaScript/TypeScript, Python, and PHP projects
 
@@ -111,9 +112,9 @@ Modernizes your repository with Docker support, CI/CD pipelines, and README upda
 | Category | Files |
 |----------|-------|
 | Docker | `Dockerfile`, `docker-compose.yml`, `.dockerignore` |
-| CI/CD (JS) | `.github/workflows/lint.yml`, `test.yml`, `audit.yml`, `build.yml` |
-| CI/CD (PHP) | `.github/workflows/lint.yml`, `analyse.yml`, `test.yml`, `audit.yml`, `docker.yml` |
-| E2E Testing | `playwright.config.ts`, `tests/e2e/screenshot.spec.ts` |
+| CI/CD (JS) | `.github/workflows/lint.yml` (Biome), `test.yml`, `audit.yml`, `build.yml` |
+| CI/CD (PHP) | `.github/workflows/lint.yml` (Mago), `js-lint.yml` (Biome), `analyse.yml`, `test.yml`, `audit.yml`, `docker.yml` |
+| E2E Testing | `playwright.config.ts`, `tests/e2e/screenshot.spec.ts`, `package.json` scripts (`screenshot`, `test:e2e`) |
 | README | CI badges, Quick Start section |
 
 See [examples/modernize-repo.md](examples/modernize-repo.md) for language-specific examples.
