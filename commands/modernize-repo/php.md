@@ -322,14 +322,62 @@ Add `package.json` to your PHP project root:
   "version": "1.0.0",
   "private": true,
   "devDependencies": {
+    "@biomejs/biome": "^1.9.0",
     "@playwright/test": "^1.49.0"
   },
   "scripts": {
+    "lint": "biome lint .",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
     "test:e2e:headed": "playwright test --headed"
   }
 }
+```
+
+#### biome.json
+
+JS/TSファイル（E2Eテスト含む）のlint設定をプロジェクトルートに作成します。
+
+```json
+{
+  "$schema": "https://biomejs.dev/schemas/1.9.0/schema.json",
+  "organizeImports": {
+    "enabled": true
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": true
+    }
+  },
+  "formatter": {
+    "enabled": false
+  }
+}
+```
+
+#### .github/workflows/js-lint.yml
+
+JS/TSファイル（E2Eテストなど）をBiomeでlintするワークフローを追加します。
+
+```yaml
+name: JS Lint
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  js-lint:
+    runs-on: ubuntu-slim
+    steps:
+      - uses: actions/checkout@v4
+      - uses: biomejs/setup-biome@v2
+        with:
+          version: latest
+      - run: biome lint .
 ```
 
 #### playwright.config.ts
@@ -509,9 +557,13 @@ php -S localhost:8000 -t public
 - If using Mago, create a `mago.toml` configuration file
 - Adjust the Dockerfile PHP extensions and entrypoint as needed
 - If security audit finds vulnerabilities, fix them with `composer update`
+- JS/TS linting with Biome:
+  - `biome.json` をプロジェクトルートに作成してルールを設定する
+  - CI: `biomejs/setup-biome@v2` アクションで `biome lint .` を実行（Node.js セットアップ不要）
+  - ローカル実行: `npm run lint`（`package.json` の `lint` スクリプト経由）
 - Playwright E2E testing (requires Node.js):
-  - Create `package.json` in project root with Playwright dependencies
-  - Install Playwright: `npm install` then `npx playwright install`
+  - Create `package.json` in project root with Biome and Playwright dependencies
+  - Install dependencies: `npm install` then `npx playwright install`
   - Run tests locally: `npm run test:e2e`
   - Run tests in UI mode: `npm run test:e2e:ui`
   - Update `playwright.config.ts` webServer command if using different PHP server setup

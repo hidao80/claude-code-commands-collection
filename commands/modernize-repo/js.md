@@ -275,7 +275,9 @@ Use the appropriate workflows based on the detected package manager.
 
 #### .github/workflows/lint.yml
 
-##### npm
+##### npm / pnpm / yarn / bun
+
+Biomeはスタンドアロンバイナリとして動作するため、パッケージマネージャーによらず共通のワークフローを使用できます。
 
 ```yaml
 name: Lint
@@ -291,86 +293,10 @@ jobs:
     runs-on: ubuntu-slim
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'npm'
-      - run: npm ci
-      - run: npm run lint
-```
-
-##### pnpm
-
-```yaml
-name: Lint
-
-on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
-
-jobs:
-  lint:
-    runs-on: ubuntu-slim
-    steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
+      - uses: biomejs/setup-biome@v2
         with:
           version: latest
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'pnpm'
-      - run: pnpm install --frozen-lockfile
-      - run: pnpm run lint
-```
-
-##### yarn
-
-```yaml
-name: Lint
-
-on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
-
-jobs:
-  lint:
-    runs-on: ubuntu-slim
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'yarn'
-      - run: yarn install --frozen-lockfile
-      - run: yarn lint
-```
-
-##### bun
-
-```yaml
-name: Lint
-
-on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
-
-jobs:
-  lint:
-    runs-on: ubuntu-slim
-    steps:
-      - uses: actions/checkout@v4
-      - uses: oven-sh/setup-bun@v2
-        with:
-          bun-version: latest
-      - run: bun install --frozen-lockfile
-      - run: bun run lint
+      - run: biome lint .
 ```
 
 ##### deno
@@ -393,6 +319,28 @@ jobs:
         with:
           deno-version: v2.x
       - run: deno lint
+```
+
+#### biome.json
+
+Biomeの設定ファイルをプロジェクトルートに作成します（npm/pnpm/yarn/bunのみ）。
+
+```json
+{
+  "$schema": "https://biomejs.dev/schemas/1.9.0/schema.json",
+  "organizeImports": {
+    "enabled": true
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": true
+    }
+  },
+  "formatter": {
+    "enabled": false
+  }
+}
 ```
 
 #### .github/workflows/test.yml
@@ -654,9 +602,11 @@ Add to `package.json`:
 ```json
 {
   "devDependencies": {
+    "@biomejs/biome": "^1.9.0",
     "@playwright/test": "^1.49.0"
   },
   "scripts": {
+    "lint": "biome lint .",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
     "test:e2e:headed": "playwright test --headed"
@@ -953,6 +903,11 @@ deno task dev
   - **npm/pnpm/yarn/bun**: `package.json` needs `build`, `dev`, `lint`, `test`, and `test:e2e` scripts
   - **deno**: `deno.json` needs `build`, `dev`, `test`, and `test:e2e` tasks
 - Adjust the Dockerfile build commands and entrypoint as needed for your project structure
+- Linting (Biome):
+  - npm/pnpm/yarn/bun: `biome lint .` via `biomejs/setup-biome@v2` GitHub Action (no Node.js setup required)
+  - deno: `deno lint` (built-in linter)
+  - Create `biome.json` in the project root to configure rules
+  - Run locally: `npx biome lint .` or install as devDependency and use `npm run lint`
 - Security audit commands vary by package manager:
   - npm: `npm audit fix`
   - pnpm: `pnpm audit --fix`
