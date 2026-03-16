@@ -1,12 +1,12 @@
-# update-memory Command Examples
+# source-analyzed Command Examples
 
-This command maintains project documentation in `docs/spec/` that serves as a readable knowledge base for both humans and AI assistants.
+This command maintains project documentation in `docs/analyzed/` that serves as a readable knowledge base for both humans and AI assistants.
 
 ## Usage
 
-Run `/update-memory` after making significant changes to your codebase. The command will:
+Run `/source-analyzed` after making significant changes to your codebase. The command will:
 
-1. Re-read existing memory docs in `docs/spec/`
+1. Re-read existing memory docs in `docs/analyzed/`
 2. Analyze the current codebase state
 3. Update documentation to reflect changes
 4. Track the commit hash for incremental updates
@@ -15,14 +15,14 @@ Run `/update-memory` after making significant changes to your codebase. The comm
 
 The command creates/updates files in this specific order:
 
-1. `docs/spec/screens.md` - UI screens and pages
-2. `docs/spec/configuration.md` - Config files and settings
-3. `docs/spec/components.md` - Reusable components
-4. `docs/spec/utilities.md` - Helper functions and utilities
-5. `docs/spec/databases.md` - Database schemas and models
-6. `docs/spec/overview.md` - Project overview and architecture
-7. `docs/spec/known_bugs.md` - Known issues and bugs
-8. `docs/spec/todo.md` - Pending tasks and improvements
+1. `docs/analyzed/screens.md` - UI screens and pages
+2. `docs/analyzed/configurations.md` - Config files and settings
+3. `docs/analyzed/components.md` - Reusable components
+4. `docs/analyzed/utilities.md` - Helper functions and utilities
+5. `docs/analyzed/databases.md` - Database schemas and models
+6. `docs/analyzed/overview.md` - Project overview and architecture
+7. `docs/analyzed/known_bugs.md` - Known issues and bugs
+8. `docs/analyzed/todo.md` - Pending tasks and improvements
 
 ## Examples
 
@@ -30,11 +30,11 @@ The command creates/updates files in this specific order:
 
 **Scenario:** New project with no existing memory docs
 
-**Command:** `/update-memory`
+**Command:** `/source-analyzed`
 
 **Result:** Creates all 8 documentation files based on current codebase analysis.
 
-**Sample output for `docs/spec/overview.md`:**
+**Sample output for `docs/analyzed/overview.md`:**
 ```markdown
 # Project Overview
 
@@ -60,7 +60,7 @@ Last updated from commit: abc1234
 
 **Scenario:** Added a new `UserProfile` component and `useAuth` hook
 
-**Before `docs/spec/components.md`:**
+**Before `docs/analyzed/components.md`:**
 ```markdown
 # Components
 
@@ -71,7 +71,7 @@ A reusable button component with variants.
 Last updated from commit: abc1234
 ```
 
-**After running `/update-memory`:**
+**After running `/source-analyzed`:**
 ```markdown
 # Components
 
@@ -103,7 +103,7 @@ Last updated from commit: def5678
 
 **Scenario:** Removed the legacy `LegacyDashboard` component
 
-**Before `docs/spec/screens.md`:**
+**Before `docs/analyzed/screens.md`:**
 ```markdown
 # Screens
 
@@ -120,7 +120,7 @@ User settings page.
 Last updated from commit: abc1234
 ```
 
-**After running `/update-memory`:**
+**After running `/source-analyzed`:**
 ```markdown
 # Screens
 
@@ -158,7 +158,7 @@ interface User {
 }
 ```
 
-**Updated `docs/spec/databases.md`:**
+**Updated `docs/analyzed/databases.md`:**
 ```markdown
 # Database Models
 
@@ -194,7 +194,7 @@ export function formatDate(date: Date): string {
 }
 ```
 
-**Updated `docs/spec/utilities.md`:**
+**Updated `docs/analyzed/utilities.md`:**
 ```markdown
 # Utilities
 
@@ -219,9 +219,9 @@ Last updated from commit: mno7890
 
 **Result:** The command automatically splits into multiple files:
 
-- `docs/spec/components-ui.md` - UI components (Button, Card, Modal, etc.)
-- `docs/spec/components-forms.md` - Form components (Input, Select, Checkbox, etc.)
-- `docs/spec/components-layout.md` - Layout components (Header, Footer, Sidebar, etc.)
+- `docs/analyzed/components-ui.md` - UI components (Button, Card, Modal, etc.)
+- `docs/analyzed/components-forms.md` - Form components (Input, Select, Checkbox, etc.)
+- `docs/analyzed/components-layout.md` - Layout components (Header, Footer, Sidebar, etc.)
 
 ## Key Rules
 
