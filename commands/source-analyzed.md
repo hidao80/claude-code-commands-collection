@@ -3,7 +3,7 @@ allowed-tools: Bash(git log:*), Read(*), Write(docs/analyzed/*.md), WebFetch(*)
 description: "Record and update project documentation in a readable state for both humans and AI"
 ---
 
-# Detail of "source-analyize" Slash Command
+# Detail of "source-analyze" Slash Command
 
 Re-read the existing Memory docs (`docs/analyzed/*.md`) and update them with attention to the following points:
 - **Important:** Use the maximum number of @Explore subagents.
