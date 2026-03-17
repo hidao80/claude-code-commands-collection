@@ -1,4 +1,4 @@
-# source-analyzed Command Examples
+# source-analyze Command Examples
 
 This command maintains project documentation in `docs/analyzed/` that serves as a readable knowledge base for both humans and AI assistants.
 
@@ -21,6 +21,7 @@ The command creates/updates files in this specific order:
 4. `docs/analyzed/utilities.md` - Helper functions and utilities
 5. `docs/analyzed/databases.md` - Database schemas and models
 6. `docs/analyzed/overview.md` - Project overview and architecture
+7. `docs/analyzed/notes.md` - Other things to record
 7. `docs/analyzed/known_bugs.md` - Known issues and bugs
 8. `docs/analyzed/todo.md` - Pending tasks and improvements
 
@@ -30,7 +31,7 @@ The command creates/updates files in this specific order:
 
 **Scenario:** New project with no existing memory docs
 
-**Command:** `/source-analyzed`
+**Command:** `/source-analyze`
 
 **Result:** Creates all 8 documentation files based on current codebase analysis.
 
