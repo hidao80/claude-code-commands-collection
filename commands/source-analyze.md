@@ -29,3 +29,21 @@ Re-read the existing Memory docs (`docs/analyzed/*.md`) and update them with att
 7. @docs/analyzed/notes.md
 8. @docs/analyzed/known_bugs.md
 9. @docs/analyzed/todo.md
+
+## Front matter format
+```md
+---
+name: analyzed-{basename}
+description: {State the purpose in one sentence.}
+type: analysis
+---
+```
+
+**Output example**
+```md
+---
+name: analyzed-components
+description: Detailed explanation of the repository's main components and responsibilities
+type: analysis
+---
+```
