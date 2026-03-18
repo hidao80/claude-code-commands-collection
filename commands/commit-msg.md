@@ -1,5 +1,5 @@
 ---
-allowed-tools: Bash(git:*), Read(All files), Write(docs/spec/*.md)
+allowed-tools: Bash(git:*), Bash(diff git:*), Bash(cd:*), Read(All files), Write(docs/spec/*.md)
 description: "Propose concise commit messages in English."
 ---
 
