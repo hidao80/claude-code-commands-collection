@@ -4,10 +4,10 @@ This command maintains project documentation in `docs/analyzed/` that serves as 
 
 ## Usage
 
-Run `/source-analyzed` after making significant changes to your codebase. The command will:
+Run `/source-analyze` after making significant changes to your codebase. The command will:
 
-1. Re-read existing memory docs in `docs/analyzed/`
-2. Analyze the current codebase state
+1. Re-read existing analysis docs in `docs/analyzed/`
+2. Analyze the current codebase state using parallel `@Explore` subagents
 3. Update documentation to reflect changes
 4. Track the commit hash for incremental updates
 
@@ -22,21 +22,29 @@ The command creates/updates files in this specific order:
 5. `docs/analyzed/databases.md` - Database schemas and models
 6. `docs/analyzed/overview.md` - Project overview and architecture
 7. `docs/analyzed/notes.md` - Other things to record
-7. `docs/analyzed/known_bugs.md` - Known issues and bugs
-8. `docs/analyzed/todo.md` - Pending tasks and improvements
+8. `docs/analyzed/known_bugs.md` - Known issues and bugs
+9. `docs/analyzed/todo.md` - Pending tasks and improvements
+10. `docs/analyzed/naming_convention.md` - Naming conventions
+11. `docs/analyzed/use_cases/*.md` - Use case diagrams (Mermaid notation)
 
 ## Examples
 
 ### Example 1: Initial Documentation Setup
 
-**Scenario:** New project with no existing memory docs
+**Scenario:** New project with no existing analysis docs
 
 **Command:** `/source-analyze`
 
-**Result:** Creates all 8 documentation files based on current codebase analysis.
+**Result:** Creates all 11 documentation files based on current codebase analysis.
 
 **Sample output for `docs/analyzed/overview.md`:**
 ```markdown
+---
+name: analyzed-overview
+description: Project overview, technology stack, and architecture summary
+type: analysis
+---
+
 # Project Overview
 
 ## Architecture
@@ -63,6 +71,12 @@ Last updated from commit: abc1234
 
 **Before `docs/analyzed/components.md`:**
 ```markdown
+---
+name: analyzed-components
+description: Detailed explanation of the repository's main components and responsibilities
+type: analysis
+---
+
 # Components
 
 ## Button
@@ -72,8 +86,14 @@ A reusable button component with variants.
 Last updated from commit: abc1234
 ```
 
-**After running `/source-analyzed`:**
+**After running `/source-analyze`:**
 ```markdown
+---
+name: analyzed-components
+description: Detailed explanation of the repository's main components and responsibilities
+type: analysis
+---
+
 # Components
 
 ## Button
@@ -121,7 +141,7 @@ User settings page.
 Last updated from commit: abc1234
 ```
 
-**After running `/source-analyzed`:**
+**After running `/source-analyze`:**
 ```markdown
 # Screens
 
@@ -224,6 +244,70 @@ Last updated from commit: mno7890
 - `docs/analyzed/components-forms.md` - Form components (Input, Select, Checkbox, etc.)
 - `docs/analyzed/components-layout.md` - Layout components (Header, Footer, Sidebar, etc.)
 
+### Example 7: Naming Conventions
+
+**Scenario:** Document the project's naming rules for consistency
+
+**Sample output for `docs/analyzed/naming_convention.md`:**
+```markdown
+---
+name: analyzed-naming_convention
+description: Naming conventions used throughout the codebase
+type: analysis
+---
+
+# Naming Conventions
+
+## Variables
+- camelCase for local variables and function parameters (`userId`, `isActive`)
+- UPPER_SNAKE_CASE for constants (`MAX_RETRY_COUNT`, `API_BASE_URL`)
+
+## Table Names
+- snake_case, plural (`users`, `order_items`)
+
+## Column Names
+- snake_case (`created_at`, `user_id`)
+
+## Function Names
+- camelCase, verb-first (`getUser`, `updateProfile`, `isValidEmail`)
+
+## Class Names
+- PascalCase (`UserService`, `OrderRepository`)
+
+---
+Last updated from commit: pqr1234
+```
+
+### Example 8: Use Case Diagrams
+
+**Scenario:** Document user interactions with Mermaid diagrams
+
+**Sample output for `docs/analyzed/use_cases/authentication.md`:**
+```markdown
+---
+name: analyzed-use_cases-authentication
+description: Use case diagram for user authentication flows
+type: analysis
+---
+
+# Use Case: Authentication
+
+```mermaid
+flowchart TD
+  User -->|visits app| A[Landing Page]
+  A -->|clicks login| B[Login Form]
+  B -->|submits credentials| C{Validate}
+  C -->|success| D[Dashboard]
+  C -->|failure| E[Show Error]
+  E --> B
+  D -->|clicks logout| F[Clear Session]
+  F --> A
+```
+
+---
+Last updated from commit: stu5678
+```
+
 ## Key Rules
 
 1. **Language:** All documentation is written in English
@@ -232,3 +316,4 @@ Last updated from commit: mno7890
 4. **Type Accuracy:** Type definitions must exactly match the current codebase
 5. **File Size:** Files exceeding 2000 tokens are automatically split
 6. **Test Priority:** Test code is treated as the source of truth for expected behavior
+7. **Front Matter:** Every file must include `name`, `description`, and `type: analysis` front matter

@@ -36,40 +36,44 @@ See [examples/commit-msg.md](examples/commit-msg.md) for more examples.
 
 ---
 
-### `/update-memory`
+### `/source-analyze`
 
 Records and updates project documentation in a readable state for both humans and AI.
 
 **Features:**
-- Re-reads and updates existing Memory docs (`docs/spec/*.md`)
+- Re-reads and updates existing analysis docs (`docs/analyzed/*.md`)
+- Uses multiple `@Explore` subagents in parallel for fast analysis
 - Automatically handles file splitting for large documents (>2000 tokens)
 - Validates implementation against test code
 - Tracks commit hash for incremental updates
 - Maintains documentation in English
 
 **Allowed tools:**
-- `Bash(git:*)` - Git operations
-- `Bash(npm:*)` - NPM operations
-- `Read(*.md,*.js,*.html,*.json)` - Read project files
-- `Write(docs/spec/*.md)` - Write to spec documentation
-- `Fetch(*)` - Web fetch operations
+- `Bash(git log:*)`, `Bash(sed:*)`, `Bash(cat:*)`, `Bash(find:*)`, `Bash(wc:*)` - Shell operations
+- `Read(*)` - Read project files
+- `Write(docs/analyzed/*.md)` - Write to analysis documentation
+- `WebFetch(*)` - Web fetch operations
+- `Glob(*)`, `Grep(*)` - File search operations
 
 **Target documentation files (created/updated in order):**
-1. `docs/spec/screens.md` - UI screens and pages
-2. `docs/spec/configuration.md` - Config files and settings
-3. `docs/spec/components.md` - Reusable components
-4. `docs/spec/utilities.md` - Helper functions and utilities
-5. `docs/spec/databases.md` - Database schemas and models
-6. `docs/spec/overview.md` - Project overview and architecture
-7. `docs/spec/known_bugs.md` - Known issues and bugs
-8. `docs/spec/todo.md` - Pending tasks and improvements
+1. `docs/analyzed/screens.md` - UI screens and pages
+2. `docs/analyzed/configurations.md` - Config files and settings
+3. `docs/analyzed/components.md` - Reusable components
+4. `docs/analyzed/utilities.md` - Helper functions and utilities
+5. `docs/analyzed/databases.md` - Database schemas and models
+6. `docs/analyzed/overview.md` - Project overview and architecture
+7. `docs/analyzed/notes.md` - Other things to record
+8. `docs/analyzed/known_bugs.md` - Known issues and bugs
+9. `docs/analyzed/todo.md` - Pending tasks and improvements
+10. `docs/analyzed/naming_convention.md` - Naming conventions
+11. `docs/analyzed/use_cases/*.md` - Use case diagrams (Mermaid)
 
 **Usage:**
 ```bash
-/update-memory
+/source-analyze
 ```
 
-See [examples/update-memory.md](examples/update-memory.md) for detailed examples.
+See [examples/source-analyze.md](examples/source-analyze.md) for detailed examples.
 
 ---
 
@@ -127,7 +131,7 @@ See [examples/modernize-repo.md](examples/modernize-repo.md) for language-specif
 claude-code-commands-collection/
 ├── commands/
 │   ├── commit-msg.md           # Commit message generator
-│   ├── update-memory.md        # Documentation updater
+│   ├── source-analyze.md       # Documentation updater
 │   └── modernize-repo/         # Repository modernization
 │       ├── COMMAND.md          # Main command definition
 │       ├── js.md               # JavaScript/TypeScript configuration
@@ -135,7 +139,7 @@ claude-code-commands-collection/
 │       └── php.md              # PHP configuration
 ├── examples/
 │   ├── commit-msg.md           # commit-msg usage examples
-│   ├── update-memory.md        # update-memory usage examples
+│   ├── source-analyze.md       # source-analyze usage examples
 │   └── modernize-repo.md       # modernize-repo usage examples
 ├── README.md
 └── LICENSE
@@ -148,7 +152,7 @@ claude-code-commands-collection/
    ```bash
    # For single-file commands
    cp commands/commit-msg.md your-project/.claude/commands/
-   cp commands/update-memory.md your-project/.claude/commands/
+   cp commands/source-analyze.md your-project/.claude/commands/
 
    # For multi-file commands (like modernize-repo)
    cp -r commands/modernize-repo your-project/.claude/commands/
